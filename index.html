@@ -395,17 +395,17 @@
   <ul class="list">
     <li>网络盘 <code>Z:\</code> 已正确挂载且在线</li>
     <li>CSV 文件存在，编码为 GBK</li>
-    <li>CSV 格式：第1列=场景名，第2列=场景路径，第3列=项目路径</li>
+    <li>场景是否存在！</li>
   </ul>
 
   <h2 class="sub">Q2：UE 启动失败或找不到可执行文件？</h2>
-  <p>请在菜单「🔧 工具 → 设置」中检查并修改 <code>UnrealEditor.exe</code> 的路径，或确认 UE 5.6 已正确安装。</p>
+  <p>确认 UE 5.6 已正确安装。</p>
 
   <h2 class="sub">Q3：采集脚本超时或卡住？</h2>
   <p>采集脚本最长允许运行 10 分钟（600 秒）。若超时，请检查：</p>
   <ul class="list">
     <li>UE 是否已正常打开并处于录制状态</li>
-    <li>spear-env Python 环境及 PYTHONPATH 配置是否正确</li>
+    <li>spear-env Python 环境及 pythonpath 配置是否正确</li>
     <li>查看运行日志中的脚本错误输出</li>
   </ul>
 
@@ -421,7 +421,7 @@
   <p>请检查：</p>
   <ul class="list">
     <li>网络盘 <code>Z:\</code> 是否在提交时在线</li>
-    <li>管理目录（<code>1-50_管理者</code> / <code>51-100_管理者1</code>）是否存在</li>
+    <li>管理目录eg：（<code>1-50_管理者</code> / <code>51-100_管理者1</code>）是否存在</li>
     <li>运行日志中是否有错误提示（如权限不足、路径不存在）</li>
   </ul>
 
