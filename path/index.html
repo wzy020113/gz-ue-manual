@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GZ-UE 场景采集管理工具 · 使用说明书</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: "Microsoft YaHei", "PingFang SC", Arial, sans-serif; font-size: 14px; color: #333; background: #f5f6fa; line-height: 1.8; }
+
+  /* 封面 */
+  .cover { background: linear-gradient(135deg, #1565C0 0%, #0D47A1 60%, #283593 100%); color: white; text-align: center; padding: 80px 40px 60px; }
+  .cover h1 { font-size: 36px; font-weight: 700; letter-spacing: 3px; margin-bottom: 10px; }
+  .cover .subtitle { font-size: 22px; letter-spacing: 8px; opacity: 0.85; margin-bottom: 6px; }
+  .cover .en { font-size: 14px; opacity: 0.55; letter-spacing: 2px; margin-bottom: 40px; font-style: italic; }
+  .cover-table { display: inline-block; background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden; margin-top: 20px; }
+  .cover-table table { border-collapse: collapse; }
+  .cover-table td { padding: 10px 24px; font-size: 13px; border-bottom: 1px solid rgba(255,255,255,0.15); }
+  .cover-table td:first-child { font-weight: bold; opacity: 0.75; text-align: right; white-space: nowrap; }
+  .cover-table tr:last-child td { border-bottom: none; }
+
+  /* 目录 */
+  .toc { background: white; max-width: 860px; margin: 30px auto 0; border-radius: 10px; padding: 32px 40px; box-shadow: 0 2px 12px rgba(0,0,0,0.07); }
+  .toc h2 { font-size: 18px; color: #1565C0; border-bottom: 2px solid #1565C0; padding-bottom: 8px; margin-bottom: 18px; }
+  .toc ol { padding-left: 20px; }
+  .toc li { margin: 6px 0; }
+  .toc a { color: #1565C0; text-decoration: none; }
+  .toc a:hover { text-decoration: underline; }
+  .toc .sub { padding-left: 20px; list-style: none; margin-top: 4px; }
+  .toc .sub li::before { content: "·  "; color: #999; }
+
+  /* 内容区 */
+  .content { max-width: 860px; margin: 24px auto 60px; }
+  .section { background: white; border-radius: 10px; padding: 36px 44px; margin-bottom: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.07); }
+
+  h1.sec { font-size: 22px; color: #1565C0; border-left: 5px solid #1565C0; padding-left: 14px; margin-bottom: 22px; }
+  h2.sub { font-size: 16px; color: #2E7D32; margin: 24px 0 10px; padding-left: 10px; border-left: 3px solid #43A047; }
+  h3.subsub { font-size: 14px; color: #5C6BC0; margin: 18px 0 8px; font-weight: bold; }
+
+  p { margin: 8px 0; }
+
+  ul.list, ol.list { padding-left: 24px; margin: 8px 0; }
+  ul.list li, ol.list li { margin: 5px 0; }
+
+  /* 表格 */
+  table.info { border-collapse: collapse; width: 100%; margin: 14px 0; font-size: 13px; }
+  table.info th { background: #1565C0; color: white; padding: 10px 14px; text-align: left; font-weight: 600; }
+  table.info td { padding: 9px 14px; border-bottom: 1px solid #eee; vertical-align: top; }
+  table.info tr:nth-child(even) td { background: #EBF5FB; }
+  table.info tr:hover td { background: #e3f2fd; }
+  table.info td:first-child { font-weight: 500; white-space: nowrap; color: #1565C0; }
+
+  /* 提示框 */
+  .tip { border-radius: 6px; padding: 12px 16px; margin: 14px 0; font-size: 13px; line-height: 1.7; }
+  .tip.warn { background: #FFF3E0; border-left: 4px solid #FB8C00; }
+  .tip.danger { background: #FFEBEE; border-left: 4px solid #E53935; }
+  .tip.info  { background: #E8F5E9; border-left: 4px solid #43A047; }
+  .tip.blue  { background: #E3F2FD; border-left: 4px solid #1565C0; }
+  .tip strong { margin-right: 6px; }
+  .tip.warn strong { color: #E65100; }
+  .tip.danger strong { color: #C62828; }
+  .tip.info strong  { color: #2E7D32; }
+  .tip.blue strong  { color: #1565C0; }
+
+  /* 步骤卡片 */
+  .steps { counter-reset: step; }
+  .step { display: flex; align-items: flex-start; margin: 10px 0; gap: 14px; }
+  .step-num { counter-increment: step; min-width: 28px; height: 28px; border-radius: 50%; background: #1565C0; color: white; font-size: 13px; font-weight: bold; display: flex; align-items: center; justify-content: center; margin-top: 2px; flex-shrink: 0; }
+  .step-body { flex: 1; padding-top: 4px; }
+
+  /* 代码/路径 */
+  code { background: #f0f0f0; border-radius: 3px; padding: 1px 5px; font-family: Consolas, monospace; font-size: 12.5px; color: #c0392b; }
+  .path-tree { background: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 6px; padding: 16px 20px; font-family: Consolas, monospace; font-size: 13px; line-height: 2; color: #333; margin: 12px 0; }
+
+  /* 流程图（简单版） */
+  .flow { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; margin: 16px 0; }
+  .flow-item { background: #1565C0; color: white; padding: 7px 14px; border-radius: 20px; font-size: 13px; white-space: nowrap; }
+  .flow-arrow { color: #999; font-size: 18px; }
+
+  @media print {
+    body { background: white; font-size: 12px; }
+    .section { box-shadow: none; border: 1px solid #e0e0e0; break-inside: avoid; }
+    .cover { background: #1565C0 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+</style>
+</head>
+<body>
+
+<!-- 封面 -->
+<div class="cover">
+  <div style="font-size:13px;opacity:0.6;letter-spacing:2px;margin-bottom:16px;">GZ · 虚幻引擎数据采集系统</div>
+  <h1>GZ-UE 场景采集管理工具</h1>
+  <div class="subtitle">使 用 说 明 书</div>
+  <div class="en">User Manual</div>
+  <div class="cover-table">
+    <table>
+      <tr><td>工具名称</td><td>GZ-UE 场景采集管理工具</td></tr>
+      <tr><td>适用系统</td><td>Windows 10 / 11</td></tr>
+      <tr><td>依赖软件</td><td>Unreal Engine 5.6 &nbsp;+&nbsp; spear-env (Anaconda)</td></tr>
+      <tr><td>文档版本</td><td>v1.0</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- 目录 -->
+<div class="toc">
+  <h2>📋 目录</h2>
+  <ol class="list">
+    <li><a href="#s1">工具概述</a>
+      <ul class="sub">
+        <li><a href="#s1-1">主要功能</a></li>
+        <li><a href="#s1-2">整体工作流程</a></li>
+      </ul>
+    </li>
+    <li><a href="#s2">界面说明</a>
+      <ul class="sub">
+        <li><a href="#s2-1">菜单栏</a></li>
+        <li><a href="#s2-2">个人信息区</a></li>
+        <li><a href="#s2-3">会话管理区</a></li>
+        <li><a href="#s2-4">场景管理区</a></li>
+        <li><a href="#s2-5">操作选项与按钮区</a></li>
+        <li><a href="#s2-6">运行控制区</a></li>
+        <li><a href="#s2-7">日志与 output 区</a></li>
+      </ul>
+    </li>
+    <li><a href="#s3">使用步骤详解</a>
+      <ul class="sub">
+        <li><a href="#s3-1">启动前准备</a></li>
+        <li><a href="#s3-2">填写个人信息</a></li>
+        <li><a href="#s3-3">新建采集会话</a></li>
+        <li><a href="#s3-4">添加场景</a></li>
+        <li><a href="#s3-5">绑定 UMAP 关卡文件</a></li>
+        <li><a href="#s3-6">设置采集次数</a></li>
+        <li><a href="#s3-7">执行自动采集</a></li>
+        <li><a href="#s3-8">中途停止</a></li>
+        <li><a href="#s3-9">提交采集结果</a></li>
+      </ul>
+    </li>
+    <li><a href="#s4">历史记录</a></li>
+    <li><a href="#s5">常见问题 FAQ</a></li>
+    <li><a href="#s6">文件与目录说明</a></li>
+    <li><a href="#s7">注意事项与最佳实践</a></li>
+  </ol>
+</div>
+
+<div class="content">
+
+<!-- 一、工具概述 -->
+<div class="section" id="s1">
+  <div>
+    <p style="text-align:center;font-weight:bold;">工具主界面图</p>
+    <img src="uemaster.png" width="500px" style="display:block;margin:0 auto 16px;" alt="工具示意图">
+  </div><br>
+  <h1 class="sec">一、工具概述</h1>
+  <p>GZ-UE 场景采集管理工具是一款专为虚幻引擎（Unreal Engine）场景数据采集设计的桌面管理软件，运行于 Windows 系统，提供从场景管理、自动化采集、结果归档到历史追踪的全流程支持。</p>
+
+  <h2 class="sub" id="s1-1">1.1 主要功能</h2>
+  <ul class="list">
+    <li>会话与场景的统一管理</li>
+    <li>支持搜索添加场景，绑定对应 UMAP 关卡文件</li>
+    <li>自动启动 UE、执行采集脚本（generate_camera_poses.py）、生成相机轨迹 CSV</li>
+    <li>采集结果一键提交，文件自动归档到对应管理目录</li>
+    <li>历史记录查看，支持按用户 / 场景过滤与检索</li>
+    <li>工具菜单提供 UE 缓存清理等辅助功能</li>
+  </ul>
+
+  <h2 class="sub" id="s1-2">1.2 整体工作流程</h2>
+  <div class="flow">
+    <span class="flow-item">① 填写姓名</span><span class="flow-arrow">→</span>
+    <span class="flow-item">② 新建会话</span><span class="flow-arrow">→</span>
+    <span class="flow-item">③ 添加场景</span><span class="flow-arrow">→</span>
+    <span class="flow-item">④ 绑定 UMAP</span><span class="flow-arrow">→</span>
+    <span class="flow-item">⑤ 设置采集次数</span><span class="flow-arrow">→</span>
+    <span class="flow-item">⑥ 自动运行</span><span class="flow-arrow">→</span>
+    <span class="flow-item">⑦ 提交归档</span>
+  </div>
+</div>
+
+<!-- 二、界面说明 -->
+<div class="section" id="s2">
+  <h1 class="sec">二、界面说明</h1>
+  <p>主界面从上至下分为以下几个区域：</p>
+
+  <h2 class="sub" id="s2-1">2.1 菜单栏</h2>
+  <table class="info">
+    <tr><th>菜单项</th><th>说明</th></tr>
+    <tr><td>📖 帮助 → 查看说明书</td><td>打开本工具的使用说明书文件（需提前放置于 <code>D:\ue工具使用说明书.txt</code>）</td></tr>
+    <tr><td>📜 历史记录 → 查看采集历史</td><td>打开历史记录对话框，查看所有采集提交记录</td></tr>
+    <tr><td>🔧 工具 → 清理UE缓存</td><td>清除 UnrealEngine 本地缓存，解决缓存导致的启动异常</td></tr>
+  </table>
+
+  <h2 class="sub" id="s2-2">2.2 个人信息区</h2>
+  <p>用于填写操作者姓名。姓名会保存到本地配置，下次启动自动恢复，并将写入提交结果和历史记录中。</p>
+  <div class="tip warn"><strong>⚠ 注意</strong>提交前务必确认姓名填写正确，历史记录中的姓名不可更改。</div>
+
+  <h2 class="sub" id="s2-3">2.3 会话管理区</h2>
+  <table class="info">
+    <tr><th>按钮</th><th>功能</th></tr>
+    <tr><td>➕ 添加会话</td><td>弹出对话框，输入会话名称后新建会话。每次采集任务建议新建独立会话。</td></tr>
+    <tr><td>🗑 清空列表</td><td>清空当前所有会话（需二次确认）</td></tr>
+    <tr><td>🔄 刷新</td><td>重新从数据库加载会话列表</td></tr>
+    <tr><td>单击会话条目</td><td>切换当前选中会话，场景列表同步切换</td></tr>
+  </table>
+  <p>「📌 当前会话」标签显示当前激活的会话名称。</p>
+
+  <h2 class="sub" id="s2-4">2.4 场景管理区</h2>
+  <h3 class="subsub">左侧：场景表格</h3>
+  <table class="info">
+    <tr><th>列名</th><th>说明</th></tr>
+    <tr><td>编号</td><td>场景文件夹名前缀数字，如 <code>52_白宫椭圆形办公厅</code> → 52</td></tr>
+    <tr><td>场景名</td><td>场景文件夹名称</td></tr>
+    <tr><td>路径</td><td>场景在服务器 / 网络盘上的完整路径</td></tr>
+    <tr><td>状态</td><td>当前采集状态（未采集 / 采集中 / 完成）</td></tr>
+    <tr><td>已采集</td><td>本次已成功采集的次数</td></tr>
+  </table>
+  <p style="margin-top:8px;">💡 右键单击场景行可复制场景路径到剪贴板。</p>
+
+  <h3 class="subsub">右侧：UMAP 关卡列表</h3>
+  <p>显示当前选中场景已绑定的 UMAP 文件，双击可在文件管理器中定位打开。</p>
+  <table class="info">
+    <tr><th>按钮</th><th>功能</th></tr>
+    <tr><td>🔍 查看并添加UMAP</td><td>打开 UMAP 浏览器，从场景目录中搜索并添加 .umap 文件（需先在场景表格中选中一行）</td></tr>
+    <tr><td>🗑 删除选中</td><td>从列表中移除当前选中的 UMAP 条目</td></tr>
+  </table>
+
+  <h2 class="sub" id="s2-5">2.5 操作选项与按钮区</h2>
+  <table class="info">
+    <tr><th>控件</th><th>说明</th></tr>
+    <tr><td>🎯 采集次数</td><td>设置每个场景的采集循环次数（1–100），默认读取设置中配置的值</td></tr>
+    <tr><td>📤 提交目标</td><td>只读显示，根据场景编号（1–50 或 51–100）自动判断归档目标目录</td></tr>
+    <tr><td>📂 导入场景文件</td><td>从磁盘手动选择场景文件夹导入</td></tr>
+    <tr><td>📦 批量导入</td><td>打开批量导入对话框，批量扫描并复制多个场景到统一目录</td></tr>
+    <tr><td>🗑 清空列表</td><td>清空场景表格中的所有行</td></tr>
+    <tr><td>❌ 删除选中</td><td>删除场景表格中当前选中的行（选中行后显示）</td></tr>
+  </table>
+
+  <h2 class="sub" id="s2-6">2.6 运行控制区</h2>
+  <table class="info">
+    <tr><th>按钮</th><th>说明</th></tr>
+    <tr><td>🚀 自动运行</td><td>启动自动采集流程，对场景列表中所有「未采集」状态的场景依次执行采集</td></tr>
+    <tr><td>⏹ 停止</td><td>发送停止信号，在当前单次采集结束后中断循环</td></tr>
+    <tr><td>🔄 刷新</td><td>刷新 output 文件夹的文件列表显示</td></tr>
+    <tr><td>▶ 播放</td><td>播放 output 目录中的图片序列（如有截图文件）</td></tr>
+    <tr><td>📤 提交整个会话</td><td>将所有场景的采集结果归档提交到管理目录</td></tr>
+  </table>
+
+  <h2 class="sub" id="s2-7">2.7 日志与 output 区</h2>
+  <p>「📜 运行日志」实时显示采集过程中每一步的操作信息，包括 UE 启动、脚本执行、CSV 移动、错误提示等，方便排查问题。</p>
+  <p>「📁 output」栏显示 output 目录中当前已生成的文件列表（CSV 轨迹文件等），提交后自动清空。</p>
+</div>
+
+<!-- 三、使用步骤 -->
+<div class="section" id="s3">
+  <h1 class="sec">三、使用步骤详解</h1>
+
+  <h2 class="sub" id="s3-1">3.1 启动前准备</h2>
+  <p>请确认以下环境已就绪：</p>
+  <ul class="list">
+    <li>Unreal Engine 5.6 已安装，默认路径：<br><code>C:\Program Files\Epic Games\UE_5.6\Engine\Binaries\Win64\UnrealEditor.exe</code></li>
+    <li>spear-env 虚拟环境已配置，Python 路径：<br><code>C:\ProgramData\anaconda3\envs\spear-env\python.exe</code></li>
+    <li>SpearSim 项目存在：<br><code>C:\spear\cpp\unreal_projects\SpearSim\SpearSim.uproject</code></li>
+    <li>采集脚本存在：<br><code>C:\spear\examples\render_image\generate_camera_poses.py</code></li>
+    <li>网络盘 <code>Z:\</code> 已正常挂载，场景文件夹和管理目录可访问</li>
+  </ul>
+  <div class="tip info"><strong>💡 提示</strong>如路径与上述不同，可在菜单「🔧 工具 → 设置」中修改 UE 路径和默认采集次数。</div>
+
+  <h2 class="sub" id="s3-2">3.2 填写个人信息</h2>
+  <div class="steps">
+    <div class="step"><div class="step-num">1</div><div class="step-body">在「👤 个人信息」区域填写自己的姓名</div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-body">姓名自动保存，下次打开工具无需重新输入</div></div>
+  </div>
+
+  <h2 class="sub" id="s3-3">3.3 新建采集会话</h2>
+  <div class="steps">
+    <div class="step"><div class="step-num">1</div><div class="step-body">点击「➕ 添加会话」按钮</div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-body">在弹出对话框中输入本次会话名称（建议以日期或任务命名，如 <code>2026-06-16采集</code>）</div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-body">点击「确定」，新会话出现在列表中并自动激活</div></div>
+  </div>
+
+  <h2 class="sub" id="s3-4">3.4 添加场景</h2>
+  <h3 class="subsub">方式一：搜索添加（推荐）</h3>
+  <div class="steps">
+    <div class="step"><div class="step-num">1</div><div class="step-body">在场景管理区顶部搜索框输入场景名关键词</div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-body">从下拉弹出列表点击目标场景，或按回车键直接添加</div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-body">场景出现在表格中，状态为「未采集」</div></div>
+  </div>
+  <div class="tip blue"><strong>📌 说明</strong>场景列表来源于 <code>Z:\场景信息.csv</code>，格式为：第1列=场景名，第2列=场景路径，第3列=项目路径，编码 GBK。</div>
+
+  <h3 class="subsub">方式二：手动导入</h3>
+  <div class="steps">
+    <div class="step"><div class="step-num">1</div><div class="step-body">点击「📂 导入场景文件」</div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-body">在文件选择对话框中定位并选择场景文件夹</div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-body">场景信息自动写入表格</div></div>
+  </div>
+
+  <h3 class="subsub">方式三：批量导入</h3>
+  <div class="steps">
+    <div class="step"><div class="step-num">1</div><div class="step-body">点击「📦 批量导入」，打开批量导入对话框</div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-body">点击「添加文件夹」，选择包含多个场景子文件夹的父目录</div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-body">选择扫描模式（自动识别数字编号场景 或 全部子文件夹）</div></div>
+    <div class="step"><div class="step-num">4</div><div class="step-body">勾选「自动查找 .uproject 文件所在目录」（推荐）</div></div>
+    <div class="step"><div class="step-num">5</div><div class="step-body">点击「🚀 开始批量导入」，等待复制完成</div></div>
+  </div>
+
+  <h2 class="sub" id="s3-5">3.5 绑定 UMAP 关卡文件</h2>
+  <div class="steps">
+    <div class="step"><div class="step-num">1</div><div class="step-body">在场景表格中单击选中目标场景行</div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-body">右侧「🔍 查看并添加UMAP」按钮变为可用，点击打开 UMAP 浏览器</div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-body">在浏览器中可通过搜索框过滤文件名，找到目标 .umap 文件后双击或点击「➕ 添加选中的UMAP」</div></div>
+    <div class="step"><div class="step-num">4</div><div class="step-body">UMAP 路径出现在右侧列表中，绑定完成</div></div>
+  </div>
+  <div class="tip warn"><strong>⚠ 注意</strong>UMAP 信息将在提交时写入 <code>场景名.txt</code> 文件，请确保绑定正确的关卡文件。</div>
+
+  <h2 class="sub" id="s3-6">3.6 设置采集次数</h2>
+  <p>在「🎯 采集次数」数字框中调整本次对每个场景的采集循环次数（默认 3 次）。可在「设置」对话框中修改默认值。</p>
+
+  <h2 class="sub" id="s3-7">3.7 执行自动采集</h2>
+  <div class="tip danger" style="margin-bottom:16px;">
+    <strong>🚨 重要操作顺序</strong>
+    每次弹窗时，必须严格按照以下顺序操作：<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;<strong>① 先在 UE 内点击「开始录制」</strong>&nbsp;&nbsp;→&nbsp;&nbsp;<strong>② 再回到本工具点击弹窗的「是」</strong><br>
+    顺序颠倒将导致本次采集数据无效！
+  </div>
+
+  <div class="steps">
+    <div class="step"><div class="step-num">1</div><div class="step-body">点击「🚀 自动运行」按钮</div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-body">工具自动对列表中每个场景依次循环执行 N 次采集，每次流程如下：
+      <ul class="list" style="margin-top:8px;">
+        <li>启动 UE（打开 SpearSim 项目），等待约 6 秒加载完成</li>
+        <li>弹出确认对话框，提示操作步骤</li>
+        <li>【重要】先在 UE 中点击「开始录制」，再点弹窗「是」</li>
+        <li>工具调用 <code>generate_camera_poses.py</code> 执行相机轨迹采集（最多 10 分钟）</li>
+        <li>脚本结束后，自动将生成的 CSV 移动到 output 文件夹</li>
+        <li>关闭 UE，等待 3 秒后进入下一次循环</li>
+      </ul>
+    </div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-body">所有场景采集完成后，表格中对应行状态变为「完成」</div></div>
+  </div>
+
+  <h2 class="sub" id="s3-8">3.8 中途停止</h2>
+  <p>在任意时刻点击「⏹ 停止」，工具会在<strong>当前单次采集结束后</strong>退出循环，不会强制中断正在运行的脚本或 UE 进程。</p>
+
+  <h2 class="sub" id="s3-9">3.9 提交采集结果</h2>
+  <div class="steps">
+    <div class="step"><div class="step-num">1</div><div class="step-body">确认所有场景采集完成后，点击「📤 提交整个会话」</div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-body">工具显示确认对话框，列出场景数量和归档目标目录，核对无误后点击「是」</div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-body">工具自动执行归档操作：
+      <ul class="list" style="margin-top:8px;">
+        <li>在对应管理目录下以姓名建立用户子文件夹</li>
+        <li>在用户子文件夹下以场景名建立独立场景文件夹</li>
+        <li>在场景文件夹内创建「采集轨迹」子文件夹，将 CSV 轨迹文件放入</li>
+        <li>生成 <code>{场景名}.txt</code>（包含场景编号、路径、UMAP 路径、采集次数）</li>
+        <li>生成 <code>采集结果信息.csv</code>（包含提交者、时间等完整信息）</li>
+        <li>清空本地 output 文件夹</li>
+      </ul>
+    </div></div>
+    <div class="step"><div class="step-num">4</div><div class="step-body">提交成功后，场景列表和会话信息自动清空，准备下一轮采集</div></div>
+  </div>
+  <div class="tip info"><strong>💡 归档路径</strong>管理目录 / 姓名 / 场景名 / 采集轨迹 / xxx_轨迹_N.csv</div>
+</div>
+
+<!-- 四、历史记录 -->
+<div class="section" id="s4">
+  <h1 class="sec">四、历史记录</h1>
+  <p>菜单「📜 历史记录 → 查看采集历史」可打开历史记录对话框，记录每次提交的详细信息。</p>
+
+  <table class="info" style="margin-top:16px;">
+    <tr><th>字段</th><th>说明</th></tr>
+    <tr><td>时间</td><td>提交时间（精确到秒）</td></tr>
+    <tr><td>用户</td><td>提交者姓名</td></tr>
+    <tr><td>场景</td><td>提交的场景名称</td></tr>
+    <tr><td>场景编号</td><td>场景数字编号</td></tr>
+    <tr><td>采集次数</td><td>本次共采集的次数</td></tr>
+    <tr><td>状态</td><td>固定为「已提交」</td></tr>
+    <tr><td>采集时长</td><td>从会话开始到提交的总耗时</td></tr>
+  </table>
+
+  <h2 class="sub">4.1 搜索过滤</h2>
+  <p>在历史记录对话框顶部的搜索框输入关键词，可同时过滤用户名和场景名，实时显示匹配结果。</p>
+
+  <h2 class="sub">4.2 管理历史记录（需管理员密码）</h2>
+  <ul class="list">
+    <li>「删除选中」：删除当前选中的单条历史记录</li>
+    <li>「清空所有」：一次性删除所有历史记录（不可恢复）</li>
+  </ul>
+  <div class="tip warn"><strong>⚠ 提示</strong>删除和清空操作需要输入管理员密码，请联系管理员获取。</div>
+</div>
+
+<!-- 五、FAQ -->
+<div class="section" id="s5">
+  <h1 class="sec">五、常见问题 FAQ</h1>
+
+  <h2 class="sub">Q1：搜索框找不到场景怎么办？</h2>
+  <p>场景列表来源于 <code>Z:\场景信息.csv</code>，请确认：</p>
+  <ul class="list">
+    <li>网络盘 <code>Z:\</code> 已正确挂载且在线</li>
+    <li>CSV 文件存在，编码为 GBK</li>
+    <li>CSV 格式：第1列=场景名，第2列=场景路径，第3列=项目路径</li>
+  </ul>
+
+  <h2 class="sub">Q2：UE 启动失败或找不到可执行文件？</h2>
+  <p>请在菜单「🔧 工具 → 设置」中检查并修改 <code>UnrealEditor.exe</code> 的路径，或确认 UE 5.6 已正确安装。</p>
+
+  <h2 class="sub">Q3：采集脚本超时或卡住？</h2>
+  <p>采集脚本最长允许运行 10 分钟（600 秒）。若超时，请检查：</p>
+  <ul class="list">
+    <li>UE 是否已正常打开并处于录制状态</li>
+    <li>spear-env Python 环境及 PYTHONPATH 配置是否正确</li>
+    <li>查看运行日志中的脚本错误输出</li>
+  </ul>
+
+  <h2 class="sub">Q4：CSV 文件没有生成？</h2>
+  <p>可能原因：</p>
+  <ul class="list">
+    <li>采集脚本未正常执行（查看日志中的 <code>[脚本输出]</code> 信息）</li>
+    <li>脚本路径不存在（默认：<code>C:\spear\examples\render_image\generate_camera_poses.py</code>）</li>
+    <li>弹窗操作顺序有误——应先点 UE 内录制，再点弹窗「是」</li>
+  </ul>
+
+  <h2 class="sub">Q5：提交后文件没有出现在管理目录？</h2>
+  <p>请检查：</p>
+  <ul class="list">
+    <li>网络盘 <code>Z:\</code> 是否在提交时在线</li>
+    <li>管理目录（<code>1-50_管理者</code> / <code>51-100_管理者1</code>）是否存在</li>
+    <li>运行日志中是否有错误提示（如权限不足、路径不存在）</li>
+  </ul>
+
+  <h2 class="sub">Q6：UE 缓存导致打开异常？</h2>
+  <p>可在菜单「🔧 工具 → 清理UE缓存」中一键清理缓存目录：</p>
+  <p><code>C:\Users\Administrator\AppData\Local\UnrealEngine</code></p>
+  <div class="tip danger"><strong>⚠ 警告</strong>此操作删除该目录下的所有文件且不可恢复，建议在 UE 完全关闭后执行。</div>
+</div>
+
+<!-- 六、目录结构 -->
+<div class="section" id="s6">
+  <h1 class="sec">六、文件与目录说明</h1>
+
+  <h2 class="sub">6.1 本地文件</h2>
+  <table class="info">
+    <tr><th>文件 / 目录</th><th>说明</th></tr>
+    <tr><td><code>manager.db</code></td><td>SQLite 数据库，存储场景、会话、采集记录</td></tr>
+    <tr><td><code>config.json</code></td><td>本地配置（姓名、UE 路径、默认采集次数等）</td></tr>
+    <tr><td><code>history.json</code></td><td>采集历史记录文件（JSON 格式）</td></tr>
+    <tr><td><code>output/</code></td><td>采集脚本生成的 CSV 轨迹文件临时存放目录，提交后自动清空</td></tr>
+  </table>
+
+  <h2 class="sub">6.2 网络盘目录（Z:\）</h2>
+  <table class="info">
+    <tr><th>目录</th><th>说明</th></tr>
+    <tr><td><code>Z:\1-50_场景文件</code></td><td>编号 1–50 的场景文件夹</td></tr>
+    <tr><td><code>Z:\51-100_场景文件2</code></td><td>编号 51–100 的场景文件夹</td></tr>
+    <tr><td><code>Z:\1-50_管理者</code></td><td>编号 1–50 场景的提交归档目录</td></tr>
+    <tr><td><code>Z:\51-100_管理者1</code></td><td>编号 51–100 场景的提交归档目录</td></tr>
+    <tr><td><code>Z:\场景信息.csv</code></td><td>场景名称与路径的索引文件（GBK 编码）</td></tr>
+    <tr><td><code>Z:\output</code></td><td>output 输出文件目录</td></tr>
+  </table>
+
+  <h2 class="sub">6.3 提交后归档目录结构</h2>
+  <p>提交成功后，每个场景会在对应管理目录下生成如下结构：</p>
+  <div class="path-tree">
+管理目录 / 姓名 / 场景名 /<br>
+&nbsp;&nbsp;&nbsp;&nbsp;├── 场景名.txt &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;（场景基本信息 + UMAP 路径）<br>
+&nbsp;&nbsp;&nbsp;&nbsp;├── 采集结果信息.csv &nbsp;&nbsp;&nbsp;&nbsp;（提交者、时间、采集次数）<br>
+&nbsp;&nbsp;&nbsp;&nbsp;└── 采集轨迹 /<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── 场景名_轨迹_1.csv<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── 场景名_轨迹_2.csv<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── 场景名_轨迹_N.csv
+  </div>
+</div>
+
+<!-- 七、注意事项 -->
+<div class="section" id="s7">
+  <h1 class="sec">七、注意事项与最佳实践</h1>
+
+  <div class="tip danger"><strong>🚨 重要</strong>每次采集弹窗时，操作顺序不可颠倒：必须先点击 UE 内「开始录制」，再点弹窗「是」。否则本次采集数据无效。</div>
+  <div class="tip danger"><strong>🚨 重要</strong>确认 UE 版本为 5.6，其他版本可能导致兼容性问题。</div>
+  <div class="tip info"><strong>✅ 建议</strong>同一批次的场景建议在同一会话下完成，便于统一提交和历史追踪。</div>
+  <div class="tip info"><strong>✅ 建议</strong>采集开始前检查 output 目录是否为空，避免旧文件混入本次结果。</div>
+  <div class="tip info"><strong>✅ 建议</strong>每次提交成功后，核实管理目录下是否已生成对应场景文件夹。</div>
+  <div class="tip blue"><strong>📌 提示</strong>「停止」按钮不会立即中断 UE 或脚本进程，只是标记停止信号，当前次采集正常结束后才退出循环。</div>
+  <div class="tip blue"><strong>📌 提示</strong>UE 缓存清理操作不可恢复，建议仅在 UE 出现异常时使用，且须在 UE 完全关闭后执行。</div>
+
+  <div style="text-align:center;margin-top:40px;color:#ccc;font-size:13px;">
+    ━━━━━━━━━━━  文档结束  ━━━━━━━━━━━<br>
+    <span style="font-style:italic;">GZ-UE 场景采集管理工具 · 用户手册</span>
+  </div>
+</div>
+
+</div><!-- /content -->
+</body>
+</html>
